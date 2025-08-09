@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getSavedForms, saveFormsToStorage } from "../utils/storage";
 
 const initialState = {
     currentForm:{
         name:"",
         fields:[]
     },
-    savedForms: []
+    savedForms: getSavedForms()  // Load from localStorage on start
 };
 
 const formSlice = createSlice({
@@ -33,6 +34,7 @@ const formSlice = createSlice({
                 createdAt: new Date().toISOString()
             };
             state.savedForms.push(newForm);
+            saveFormsToStorage(state.savedForms); // Save to localStorage
             state.currentForm = {name: "",fields:[]};
         },
 
@@ -44,6 +46,7 @@ const formSlice = createSlice({
         // Load saved forms from localStorage
         setSavedForms(state,action){
             state.savedForms = action.payload;
+            saveFormsToStorage(action.payload); // Sync with localStorage
         }
     }
 });
